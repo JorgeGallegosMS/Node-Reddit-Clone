@@ -19,7 +19,7 @@ app.set('view engine', 'handlebars');
 require('./data/reddit-db');
 
 app.get('/', (req, res) => {
-    res.render('home')
+    res.redirect('/posts/index')
 })
 
 app.get('/posts/new', (req, res) => {
