@@ -17,6 +17,8 @@ app.set('view engine', 'handlebars');
 
 // Set db
 require('./data/reddit-db');
+require('./controllers/posts.js')(app);
+require('./controllers/comments.js')(app);
 
 app.get('/', (req, res) => {
     res.redirect('/posts/index')
@@ -26,7 +28,6 @@ app.get('/posts/new', (req, res) => {
     res.render('posts-new')
 })
 
-require('./controllers/posts.js')(app);
 
 app.listen(3000, () => {
     console.log('Listening on port 3000');

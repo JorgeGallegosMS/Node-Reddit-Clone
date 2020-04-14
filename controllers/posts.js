@@ -12,7 +12,7 @@ module.exports = app => {
     })
 
     app.get("/posts/:id", function(req, res) {
-        Post.findById(req.params.id).lean()
+        Post.findById(req.params.id).lean().populate('comments')
             .then(post => {
                 res.render("posts-show", { post });
             })
