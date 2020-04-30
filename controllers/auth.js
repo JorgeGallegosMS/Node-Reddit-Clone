@@ -4,7 +4,8 @@ const User = require("../models/user")
 module.exports = (app) => {
     // SIGN UP FORM
     app.get("/sign-up", (req, res) => {
-      res.render("sign-up", { title: "Sign Up", button: "Create Account" });
+        let currentUser = req.user
+        res.render("sign-up", { title: "Sign Up", button: "Create Account", currentUser });
     });
 
     app.post("/sign-up", (req, res) => {
@@ -12,7 +13,7 @@ module.exports = (app) => {
 
         user.save()
             .then(user => {
-                let token = jwt.sign({ _id: user._id}, process.env.SECRET, {expiresIn: "60 days"});
+                let token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" });
                 res.cookie('nToken', token, { maxAge: 900000, httpOnly: true })
                 res.redirect("/");
             })
@@ -28,7 +29,8 @@ module.exports = (app) => {
     })
 
     app.get('/login', (req, res) => {
-        res.render('login', { title: "Login", button: "Login" });
+        let currentUser = req.user
+        res.render('login', { title: "Login", button: "Login", currentUser });
     })
 
     app.post('/login', (req, res) => {

@@ -12,6 +12,23 @@ const expressValidator = require('express-validator');
 
 const app = express();
 
+let checkAuth = (req, res, next) => {
+    console.log("Checking authentication")
+    if (typeof req.cookies.nToken === "undefined" || req.cookies.nToken === null) {
+        req.user = null
+    } else {
+        let token = req.cookies.nToken
+        let decodedToken = jwt.decode(token, { complete: true }) || {}
+        console.log(decodedToken)
+        req.user = decodedToken.payload
+    }
+
+    next()
+}
+
+
+app.use(cookieParser())
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -22,6 +39,7 @@ app.set('view engine', 'handlebars');
 
 // Set db
 require('./data/reddit-db');
+app.use(checkAuth);
 
 app.get('/', (req, res) => {
     res.redirect('/posts/index')
