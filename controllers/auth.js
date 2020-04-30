@@ -49,8 +49,8 @@ module.exports = (app) => {
                     // Password matches. Create token
                     const token = jwt.sign({ _id: user._id, username: user.username }, process.env.SECRET, { expiresIn: "60 days" });
                     // Set cookie and redirect to root
-                    res.cookie("nToken", token, { maxAge: 900000, httpOnly: true })
-                    res.redirect('/')
+                    res.cookie("nToken", token, { maxAge: 900000, httpOnly: true });
+                    res.redirect('/');
                 })
             })
             .catch(err => {
