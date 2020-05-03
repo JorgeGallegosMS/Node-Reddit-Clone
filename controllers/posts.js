@@ -1,10 +1,14 @@
 const Post = require('../models/post');
+const User = require('../models/user')
 
 module.exports = app => {
     app.get('/posts/index', (req, res) => {
         let currentUser = req.user
 
-        Post.find({}).lean()
+        console.log(req.cookies);
+
+
+        Post.find({}).lean().populate('author')
             .then(posts => {
                 res.render('posts-index', { posts, currentUser })
             })
@@ -16,7 +20,7 @@ module.exports = app => {
     app.get("/posts/:id", function(req, res) {
         let currentUser = req.user
 
-        Post.findById(req.params.id).lean().populate('comments')
+        Post.findById(req.params.id).lean().populate('comments').populate('author')
             .then(post => {
                 res.render("posts-show", { post, currentUser });
             })
@@ -29,11 +33,22 @@ module.exports = app => {
     app.post("/posts/new", (req, res) => {
         if (req.user) {
             let post = new Post(req.body);
+            post.author = req.user._id;
 
-            post.save((err, post) => {
-                console.log(post);
-                return res.redirect('/');
-            })
+            console.log(post.author)
+
+            post.save()
+                .then(post => {
+                    return User.findById(req.user._id);
+                })
+                .then(user => {
+                    user.posts.unshift(post);
+                    user.save();
+                    res.redirect(`/posts/${post._id}`);
+                })
+                .catch(err => {
+                    console.log(err.message);
+                });
         } else {
             return res.status(401) // Unauthorized
         }
@@ -44,7 +59,7 @@ module.exports = app => {
     app.get("/n/:subreddit", function(req, res) {
         let currentUser = req.user
 
-        Post.find({ subreddit: req.params.subreddit }).lean()
+        Post.find({ subreddit: req.params.subreddit }).lean().populate('author')
         .then(posts => {
             res.render("posts-index", { posts, currentUser });
         })

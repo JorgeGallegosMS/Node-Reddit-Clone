@@ -38,7 +38,6 @@ app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 // Set db
-require('./data/reddit-db');
 app.use(checkAuth);
 
 app.get('/', (req, res) => {
@@ -46,12 +45,14 @@ app.get('/', (req, res) => {
 })
 
 app.get('/posts/new', (req, res) => {
-    res.render('posts-new')
+    let currentUser = req.user
+    res.render('posts-new', { currentUser })
 })
 
 require('./controllers/auth.js')(app);
 require('./controllers/posts.js')(app);
 require('./controllers/comments.js')(app);
+require('./data/reddit-db');
 
 app.listen(3000, () => {
     console.log('Listening on port 3000');
