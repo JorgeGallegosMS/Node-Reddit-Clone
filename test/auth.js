@@ -30,8 +30,7 @@ describe("User", function() {
             });
         });
     });
+    after(function () {
+        agent.close()
+    });
 });
-
-after(function () {
-    agent.close()
-  });
