@@ -20,7 +20,7 @@ module.exports = app => {
     app.get("/posts/:id", function(req, res) {
         let currentUser = req.user
 
-        Post.findById(req.params.id).lean().populate('comments').populate('author')
+        Post.findById(req.params.id).lean().populate({ path: 'comments', populate: { path: 'author' } }).populate('author')
             .then(post => {
                 res.render("posts-show", { post, currentUser });
             })
