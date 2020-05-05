@@ -8,7 +8,7 @@ module.exports = app => {
         console.log(req.cookies);
 
 
-        Post.find({}).lean().populate('author')
+        Post.find({}).lean()
             .then(posts => {
                 res.render('posts-index', { posts, currentUser })
             })
