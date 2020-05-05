@@ -17,6 +17,9 @@
     <ul class="nav navbar-nav navbar-right">
       {{#if currentUser}}
       <li class="pr-4">
+        <small>Logged in as {{currentUser.username}}</small>
+      </li>
+      <li class="pr-4">
         <a href="/logout">Logout</a>
       </li>
       {{else}}

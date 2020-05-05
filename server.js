@@ -36,8 +36,10 @@ app.use(expressValidator());
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+app.use(express.static('public'))
 
 // Set db
+require('./data/reddit-db');
 app.use(checkAuth);
 
 app.get('/', (req, res) => {
@@ -49,10 +51,10 @@ app.get('/posts/new', (req, res) => {
     res.render('posts-new', { currentUser })
 })
 
-require('./controllers/auth.js')(app);
-require('./controllers/posts.js')(app);
+require('./controllers/posts')(app);
 require('./controllers/comments.js')(app);
-require('./data/reddit-db');
+require('./controllers/auth.js')(app);
+require('./controllers/replies.js')(app);
 
 app.listen(3000, () => {
     console.log('Listening on port 3000');
